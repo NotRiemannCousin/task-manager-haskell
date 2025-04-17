@@ -30,8 +30,8 @@ listarPorCategoria cat lista = filter (\t -> categoria t == cat) lista
 listarPorPrioridade :: Prioridade -> [Tarefa] -> [Tarefa]
 listarPorPrioridade pri lista = filter (\t -> prioridade t == pri) lista
 
--- se a lista for unitaria, retorna o unico elemento, caso seja binaria, compara a com b e retorna [a, b] ou [b, a], dependendo da prioridade, caso o tamanho seja > 2, ela compara os valores um por um,
--- salvando no topo da lista os de maior prioridade
+-- se a lista for unitaria, retorna o unico elemento, caso seja binaria, compara a com b e retorna [a, b] ou [b, a], 
+-- dependendo da prioridade, caso o tamanho seja > 2, ela compara os valores um por um, salvando no topo da lista os de maior prioridade
 
 ordenarPorPrioridade :: [Tarefa] -> [Tarefa]
 ordenarPorPrioridade [] = []
