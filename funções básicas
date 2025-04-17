@@ -9,3 +9,9 @@ removerTarefa id tarefas =
        then Right (filter (\t -> idTarefa t /= id) tarefas)
        else Left "Erro! Tarefa não encontrada"
 
+marcarConcluida :: Int -> [Tarefa] -> Either String [Tarefa]
+marcarConcluida id tarefas =
+    if any (\t -> idTarefa t == id) tarefas
+       then Right (map (\t -> if idTarefa t == id then t {status = Concluida} else t) tarefas)
+       else Left "Erro! Tarefa não encontrada"
+
