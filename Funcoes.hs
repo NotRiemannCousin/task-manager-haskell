@@ -16,3 +16,13 @@ listarPorPrioridade pri lista = filter (\t -> prioridade t == pri) lista
 -- status t que são iguais a variavel estado da lista de tarefas principal
 filtrarPorStatus :: Status -> [Tarefa] -> [Tarefa]
 filtrarPorStatus estado lista = filter (\t -> status t == estado) lista
+
+buscarPorPalavraChave :: String -> [Tarefa] -> [Tarefa]
+buscarPorPalavraChave tarefReq lista = 
+    filter(\t -> transformarMinuscula (descricao t) == transformarMinuscula tarefReq) lista 
+
+transformarMinuscula :: String -> String
+transformarMinuscula [] = []
+transformarMinuscula (x:xs)
+    | x >= 'A' && x <= 'Z' = toEnum (fromEnum x + 32) : transformarMinuscula xs
+    | otherwise            = x : transformarMinuscula xs
