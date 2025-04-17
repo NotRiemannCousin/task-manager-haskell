@@ -1,0 +1,11 @@
+adicionarTarefa :: Tarefa -> [Tarefa] -> Either String [Tarefa]
+adicionarTarefa novaTarefa tarefas
+    | [t | t <- tarefas, idTarefa t == idTarefa novaTarefa] /= [] = Left "Erro!Tarefa já registrada"
+    | otherwise = Right (novaTarefa : tarefas)
+
+removerTarefa :: Int -> [Tarefa] -> Either String [Tarefa]
+removerTarefa id tarefas =
+    if any (\t -> idTarefa t == id) tarefas
+       then Right (filter (\t -> idTarefa t /= id) tarefas)
+       else Left "Erro! Tarefa não encontrada"
+
