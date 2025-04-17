@@ -1,5 +1,19 @@
-module Funcoes where
- import Tipos
+module Funcoes (
+    adicionarTarefa,
+    removerTarefa,
+    marcarConcluida,
+    listarPorCategoria,
+    listarPorPrioridade,
+    ordenarPorPrioridade,
+    filtrarPorStatus,
+    buscarPorPalavraChave,
+    calcularDiasRestantes,
+    filtrarPorTag,
+    nuvemDeTags
+) where
+import Data.Time.Calendar (Day, diffDays)
+import Tipos
+
 
 -- FUNÇÕES BÁSICAS
 adicionarTarefa :: Tarefa -> [Tarefa] -> Either String [Tarefa]
@@ -16,9 +30,12 @@ removerTarefa id tarefas =
 marcarConcluida :: Int -> [Tarefa] -> Either String [Tarefa]
 marcarConcluida id tarefas =
     if any (\t -> idTarefa t == id) tarefas
-       then Right (map (\t -> if idTarefa t == id then t {status = Concluida} else t) tarefas)
+       then Right (map (\t -> if idTarefa t == id then t {status = Concluída} else t) tarefas)
        else Left "Erro! Tarefa não encontrada"
 -- FUNÇÕES BÁSICAS
+
+
+
 
 -- filtra a lista "lista" com a categoria "cat"
 
@@ -58,3 +75,35 @@ transformarMinuscula [] = []
 transformarMinuscula (x:xs)
     | x >= 'A' && x <= 'Z' = toEnum (fromEnum x + 32) : transformarMinuscula xs
     | otherwise            = x : transformarMinuscula xs
+
+
+
+
+
+-- KG
+
+-- Se a tarefa não tem prazo, o resultado é Nothing. Caso contrário, usa a função diffDays pra pegar a quantidade
+-- de dias, transforma de Interger pra Int e retorna como Just (significa que o valor existe, não é nothing)
+calcularDiasRestantes :: Tarefa -> Day -> Maybe Int
+calcularDiasRestantes (Tarefa {prazo = Nothing}) _ = Nothing
+calcularDiasRestantes (Tarefa {prazo = Just prazo}) termino = Just $ fromIntegral $ diffDays prazo termino
+
+-- Quando cada tarefa entra no `filter` primeiro selecionamos a sua lista de tags e depois filtramos vendo
+-- se a tag procurada está na lista.
+filtrarPorTag :: String -> [Tarefa] -> [Tarefa]
+filtrarPorTag tag tarefas = filter (any (== tag) . tags) tarefas
+
+
+-- Essa é uma função auxiliar que não será exportada.
+removerDuplicadas :: Eq a => [a] -> [a]
+removerDuplicadas [] = []
+removerDuplicadas (x:xs) = x : removerDuplicadas (filter (/= x) xs)
+
+
+-- Em allTags, primeiro pegamos as listas de tags de cada tarefa com o `map` e concatenamos essas listas. Depois
+-- com o map para cada tag contamos quantas vezes ela aparece na propria lista, e depois removemos as duplicadas.
+nuvemDeTags :: [Tarefa] -> [(String, Int)]
+nuvemDeTags tarefas = removerDuplicadas $ map (\t -> (t, count t allTags)) allTags
+                where
+                    allTags         = concat $ map (tags) tarefas
+                    count x xs      = length $ filter (==x) xs
