@@ -2,6 +2,7 @@ module Funcoes where
  import Tipos
 
 -- FUNÇÕES BÁSICAS
+
 adicionarTarefa :: Tarefa -> [Tarefa] -> Either String [Tarefa]
 adicionarTarefa novaTarefa tarefas
     | [t | t <- tarefas, idTarefa t == idTarefa novaTarefa] /= [] = Left "Erro!Tarefa já registrada"
