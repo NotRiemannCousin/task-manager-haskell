@@ -1,4 +1,5 @@
 module Tipos where
+
  import Data.Time.Calendar (Day)
 
  data Status = Pendente | Concluída deriving (Show, Eq)
