@@ -2,7 +2,6 @@ module Funcoes where
  import Tipos
 
 -- FUNÇÕES BÁSICAS
-
 adicionarTarefa :: Tarefa -> [Tarefa] -> Either String [Tarefa]
 adicionarTarefa novaTarefa tarefas
     | [t | t <- tarefas, idTarefa t == idTarefa novaTarefa] /= [] = Left "Erro!Tarefa já registrada"
@@ -31,6 +30,19 @@ listarPorCategoria cat lista = filter (\t -> categoria t == cat) lista
 listarPorPrioridade :: Prioridade -> [Tarefa] -> [Tarefa]
 listarPorPrioridade pri lista = filter (\t -> prioridade t == pri) lista
 
+-- se a lista for unitaria, retorna o unico elemento, caso seja binaria, compara a com b e retorna [a, b] ou [b, a], dependendo da prioridade, caso o tamanho seja > 2, ela compara os valores um por um,
+-- salvando no topo da lista os de maior prioridade
+
+ordenarPorPrioridade :: [Tarefa] -> [Tarefa]
+ordenarPorPrioridade [] = []
+ordenarPorPrioridade [a] = [a]
+ordenarPorPrioridade [a, b]
+    |prioridade a > prioridade b = [a, b]
+    |otherwise = [b, a]
+ordenarPorPrioridade (a:b:c:xs)
+    |prioridade a >= prioridade b && prioridade a >= prioridade c = a:ordenarPorPrioridade (b:c:xs)
+    |prioridade b >= prioridade a && prioridade b >= prioridade c = b:ordenarPorPrioridade (a:c:xs)
+    |otherwise = c:ordenarPorPrioridade(a:b:xs)
 
 -- filter nesse caso tem como objetivo filtrar os elementos de um certo
 -- status t que são iguais a variavel estado da lista de tarefas principal
