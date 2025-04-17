@@ -1,5 +1,6 @@
 buscarPorPalavraChave :: String -> [Tarefa] -> [Tarefa]
-buscarPorPalavraChave tarefReq lista = filter(\t -> transformarMinuscula (descricao t) == transformarMinuscula tarefReq) lista 
+buscarPorPalavraChave tarefReq lista = 
+    filter(\t -> transformarMinuscula (descricao t) == transformarMinuscula tarefReq) lista 
 
 
 
