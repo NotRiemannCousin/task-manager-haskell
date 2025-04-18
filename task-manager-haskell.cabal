@@ -1,5 +1,0 @@
-cabal-version:      2.4
-name:               task-manager-haskell
-version:            0.1.0.0
-build-type:         Simple
-extra-source-files: README.md
