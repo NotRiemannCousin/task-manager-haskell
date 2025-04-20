@@ -7,8 +7,10 @@ module Funcoes (
     ordenarPorPrioridade,
     filtrarPorStatus,
     buscarPorPalavraChave,
+    verificarAtrasos,
     calcularDiasRestantes,
     filtrarPorTag,
+    mostrarTarefa,
     nuvemDeTags
 ) where
 import Data.Time.Calendar (Day, diffDays)
@@ -77,7 +79,15 @@ transformarMinuscula (x:xs)
     | otherwise            = x : transformarMinuscula xs
 
 
-
+mostrarTarefa :: Tarefa -> String
+mostrarTarefa tarefa =
+    "ID: " ++ show (idTarefa tarefa) ++ "; " ++
+    "Descrição: " ++ show (descricao tarefa) ++ "; " ++
+    "Status: " ++ show (status tarefa) ++ "; " ++
+    "Prioridade: " ++ show (prioridade tarefa) ++ "; " ++
+    "Categoria: " ++ show (categoria tarefa) ++ "; " ++
+    "Prazo: " ++ maybe "Sem prazo" show (prazo tarefa) ++ "; " ++
+    "Tags: " ++ show (tags tarefa)
 
 
 -- KG
@@ -87,6 +97,16 @@ transformarMinuscula (x:xs)
 calcularDiasRestantes :: Tarefa -> Day -> Maybe Int
 calcularDiasRestantes (Tarefa {prazo = Nothing}) _ = Nothing
 calcularDiasRestantes (Tarefa {prazo = Just prazo}) termino = Just $ fromIntegral $ diffDays prazo termino
+
+
+verificarAtrasos :: [Tarefa] -> Day -> [Tarefa]
+verificarAtrasos tarefas dia =
+    [t | t <- tarefas,
+     case prazo t of
+       Just p -> p <= dia
+       Nothing -> False
+    ]
+
 
 -- Quando cada tarefa entra no `filter` primeiro selecionamos a sua lista de tags e depois filtramos vendo
 -- se a tag procurada está na lista.
