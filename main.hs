@@ -4,6 +4,8 @@ import Data.Time.Calendar
 import Data.Time
 import Data.List
 import System.IO
+
+import Persistencias
 import Funcoes
 import Tipos
 
@@ -11,10 +13,9 @@ import Tipos
 main :: IO ()
 main = do
     hSetBuffering stdout NoBuffering
-
-    let tarefas = []
+    tarefas <- carregarDeArquivo "tarefas.txt"
     res <- menu tarefas
-    writeFile "tarefas.txt" (show res)
+    salvarEmArquivo "tarefas.txt" res
 
 
 
@@ -44,7 +45,7 @@ input text = do
 menu :: [Tarefa] -> IO [Tarefa]
 menu tarefas = do
     -- menu de ações --
-    putStrLn $ replicate 30 '\n' -- limpa tudo
+    putStrLn $ replicate 60 '\n' -- limpa tudo
     putStrLn "- O que gostaria de realizar?:"
     putStrLn "   1  > adicionar nova tarefa"
     putStrLn "   2  > remover uma tarefa"
