@@ -14,7 +14,6 @@ module Funcoes (
 ) where
 import Data.Time.Calendar (Day, diffDays)
 import Tipos
-import System.IO
 
 
 -- FUNÇÕES BÁSICAS
