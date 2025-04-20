@@ -7,7 +7,7 @@ module Main where
  main = do
  -- menu de ações --
     putStr "- O que gostaria de realizar?:\n "
-    putStr "  1  > adicionar nova tarefa\n"
+    putStr "   1  > adicionar nova tarefa\n"
     putStr "   2  > remover uma tarefa\n"
     putStr "   3  > marcar uma tarefa como concluida\n"
     putStr "   4  > listar tarefas por categoria\n"
