@@ -2,11 +2,11 @@ module Tipos where
 
  import Data.Time.Calendar (Day)
 
- data Status = Pendente | Concluída deriving (Show, Eq)
+ data Status = Pendente | Concluída deriving (Show, Read, Eq)
 
- data Prioridade = Baixa | Media | Alta deriving (Show, Eq, Ord)
+ data Prioridade = Baixa | Media | Alta deriving (Show, Read, Eq, Ord)
 
- data Categoria = Trabalho | Estudos | Pessoal | Outro deriving (Show, Eq)
+ data Categoria = Trabalho | Estudos | Pessoal | Outro deriving (Show, Read, Eq)
 
  data Tarefa = Tarefa
   { idTarefa    :: Int
@@ -16,4 +16,5 @@ module Tipos where
   , categoria   :: Categoria
   , prazo       :: Maybe Day
   , tags       :: [String]
-  } deriving (Show, Eq)
+  } deriving (Show, Read, Eq)
+
