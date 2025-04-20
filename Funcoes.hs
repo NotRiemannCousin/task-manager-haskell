@@ -10,6 +10,7 @@ module Funcoes (
     verificarAtrasos,
     calcularDiasRestantes,
     filtrarPorTag,
+    mostrarTarefa,
     nuvemDeTags
 ) where
 import Data.Time.Calendar (Day, diffDays)
@@ -78,7 +79,15 @@ transformarMinuscula (x:xs)
     | otherwise            = x : transformarMinuscula xs
 
 
-
+mostrarTarefa :: Tarefa -> String
+mostrarTarefa tarefa =
+    "ID: " ++ show (idTarefa tarefa) ++ "; " ++
+    "Descrição: " ++ show (descricao tarefa) ++ "; " ++
+    "Status: " ++ show (status tarefa) ++ "; " ++
+    "Prioridade: " ++ show (prioridade tarefa) ++ "; " ++
+    "Categoria: " ++ show (categoria tarefa) ++ "; " ++
+    "Prazo: " ++ maybe "Sem prazo" show (prazo tarefa) ++ "; " ++
+    "Tags: " ++ show (tags tarefa)
 
 
 -- KG
