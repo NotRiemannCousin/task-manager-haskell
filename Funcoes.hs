@@ -127,3 +127,27 @@ nuvemDeTags tarefas = removerDuplicadas $ map (\t -> (t, count t allTags)) allTa
                 where
                     allTags         = concat $ map (tags) tarefas
                     count x xs      = length $ filter (==x) xs
+
+
+relatorio :: [Tarefa] -> String
+relatorio tarefas =
+  let total = length tarefas
+      pendentes = length (filter (\t -> status t == Pendente) tarefas)
+      concluidas = length (filter (\t -> status t == Concluída) tarefas)
+      trabalho = length (filter (\t -> categoria t == Trabalho) tarefas)
+      estudo = length (filter (\t -> categoria t == Estudos) tarefas)
+      pessoal = length (filter (\t -> categoria t == Pessoal) tarefas)
+      outro = length (filter (\t -> categoria t == Outro) tarefas)
+
+  in  "Tarefas totais: " ++ show total ++ "\n" ++
+      "Pendentes: " ++ show pendentes ++ "\n" ++
+      "Concluídas: " ++  show concluidas ++ "\n" ++
+      "Distribuição por categoria: " ++ "\n" ++
+      "   - Trabalho: " ++ show trabalho ++ " (" ++ show (porcentagem (trabalho) (length tarefas)) ++ "%)" ++ "\n" ++
+      "   - Estudos: " ++ show estudo ++ " (" ++ show (porcentagem (estudo) (length tarefas)) ++ "%)" ++ "\n" ++
+      "   - Pessoal: " ++ show pessoal ++ " (" ++ show (porcentagem (pessoal) (length tarefas)) ++ "%)" ++ "\n" ++
+      "   - Outro: " ++ show outro ++ " (" ++ show (porcentagem (outro) (length tarefas)) ++ "%)"
+
+
+porcentagem :: Int -> Int -> Float
+porcentagem x total = (fromIntegral x / fromIntegral total) * 100
