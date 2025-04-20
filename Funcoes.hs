@@ -7,6 +7,7 @@ module Funcoes (
     ordenarPorPrioridade,
     filtrarPorStatus,
     buscarPorPalavraChave,
+    verificarAtrasos,
     calcularDiasRestantes,
     filtrarPorTag,
     nuvemDeTags
@@ -87,6 +88,16 @@ transformarMinuscula (x:xs)
 calcularDiasRestantes :: Tarefa -> Day -> Maybe Int
 calcularDiasRestantes (Tarefa {prazo = Nothing}) _ = Nothing
 calcularDiasRestantes (Tarefa {prazo = Just prazo}) termino = Just $ fromIntegral $ diffDays prazo termino
+
+
+verificarAtrasos :: [Tarefa] -> Day -> [Tarefa]
+verificarAtrasos tarefas dia =
+    [t | t <- tarefas,
+     case prazo t of
+       Just p -> p <= dia
+       Nothing -> False
+    ]
+
 
 -- Quando cada tarefa entra no `filter` primeiro selecionamos a sua lista de tags e depois filtramos vendo
 -- se a tag procurada está na lista.
