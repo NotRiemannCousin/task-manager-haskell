@@ -6,7 +6,7 @@ module Tipos where
 
  data Prioridade = Baixa | Media | Alta deriving (Show, Eq, Ord)
 
- data Categoria = Trabalho | Estudos | Pessoal | Outro deriving (Show,Eq)
+ data Categoria = Trabalho | Estudos | Pessoal | Outro deriving (Show, Eq)
 
  data Tarefa = Tarefa
   { idTarefa    :: Int
