@@ -128,7 +128,7 @@ nuvemDeTags tarefas = removerDuplicadas $ map (\t -> (t, count t allTags)) allTa
                     allTags         = concat $ map (tags) tarefas
                     count x xs      = length $ filter (==x) xs
 
-
+-- As variáveis locais são utilizadas para facilitar nos cálculos de porcentagem.
 relatorio :: [Tarefa] -> String
 relatorio tarefas =
   let total = length tarefas
