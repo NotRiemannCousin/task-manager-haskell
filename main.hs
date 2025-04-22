@@ -98,9 +98,9 @@ adicionarTarefaMenu tarefas = do
     id         <- input       "Digite o id da tarefa: " :: IO Int
     titulo     <- inputString "Digite o titulo da tarefa: "
     descricao  <- inputString "Digite a descricao da tarefa: "
-    categoria  <- input       "Digite a categoria da tarefa: " :: IO Categoria
-    prioridade <- input       "Digite a prioridade da tarefa: " :: IO Prioridade
-    status     <- input       "Digite o status da tarefa: " :: IO Status
+    categoria  <- input       "Digite a categoria da tarefa (Trabalho | Estudos | Pessoal | Outro): " :: IO Categoria
+    prioridade <- input       "Digite a prioridade da tarefa (Baixa | Media | Alta): " :: IO Prioridade
+    status     <- input       "Digite o status da tarefa (Pendente | Concluída): " :: IO Status
 
     putStrLn "Digite o prazo da tarefa:"
     prazo <- getLine >>= trataPrazo
@@ -143,7 +143,7 @@ marcarConcluidaMenu tarefas = do
 
 listarPorCategoriaMenu :: [Tarefa] -> IO [Tarefa]
 listarPorCategoriaMenu tarefas = do
-    categoria <- input "Digite a categoria da tarefa: " :: IO Categoria
+    categoria <- input "Digite a categoria da tarefa (Trabalho | Estudos | Pessoal | Outro): " :: IO Categoria
     let listaFiltrada = listarPorCategoria categoria tarefas
     putStrLn "\n------------=== Listando Por Categoria ===------------ \n"
     mapM_ print listaFiltrada
@@ -152,7 +152,7 @@ listarPorCategoriaMenu tarefas = do
 
 listarPorPrioridadeMenu :: [Tarefa] -> IO [Tarefa]
 listarPorPrioridadeMenu tarefas = do
-    prioridade <- input "Digite a prioridade da tarefa: " :: IO Prioridade
+    prioridade <- input "Digite a prioridade da tarefa (Baixa | Media | Alta): " :: IO Prioridade
     let listaFiltrada = listarPorPrioridade prioridade tarefas
     putStrLn "\n------------=== Listando Por Prioridade ===------------ \n"
     mapM_ print listaFiltrada
@@ -171,7 +171,7 @@ ordenarPorPrioridadeMenu tarefas = do
 
 filtrarPorStatusMenu :: [Tarefa] -> IO [Tarefa]
 filtrarPorStatusMenu tarefas = do
-    status <- input "Digite o status da tarefa: " :: IO Status
+    status <- input "Digite o status da tarefa (Pendente | Concluída): " :: IO Status
     let listaFiltrada = filtrarPorStatus status tarefas
     putStrLn "\n------------=== Filtrando Lista ===------------ \n"
     mapM_ print listaFiltrada
