@@ -17,8 +17,6 @@ main = do
     res <- menu tarefas
     salvarEmArquivo "tarefas.txt" res
 
-
-
 inputString :: String -> IO String
 inputString text = do
     putStr text
