@@ -19,19 +19,23 @@ data Tarefa = Tarefa
     , tags       :: [String]
     } deriving (Read, Eq)
 
+
+showDay :: Maybe Day -> String
+showDay Nothing = "Sem prazo"
+showDay (Just d) = formatTime defaultTimeLocale "%Y-%m-%d" d
+
 instance Show Tarefa where
     show tarefa =
         let linha = "--------=== tarefa " ++ show (idTarefa tarefa) ++ "===--------"
-            prazoStr = maybe "Sem prazo" formatarData (prazo tarefa)
             conteudo = unlines
-                [ "descricao: " ++ descricao tarefa
-                , "id: " ++ show (idTarefa tarefa)
-                , "status: " ++ show (status tarefa)
-                , "prioridade: " ++ show (prioridade tarefa)
-                , "categoria: " ++ show (categoria tarefa)
-                , "prazo: " ++ prazoStr
-                , "tags: " ++ show (tags tarefa)
+                [ "descricao: "  ++ descricao tarefa
+                , "id: "         ++ show    (idTarefa tarefa)
+                , "status: "     ++ show    (status tarefa)
+                , "prioridade: " ++ show    (prioridade tarefa)
+                , "categoria: "  ++ show    (categoria tarefa)
+                , "prazo: "      ++ showDay (prazo tarefa)
+                , "tags: "       ++ show    (tags tarefa)
                 ]
         in unlines [linha, conteudo, linha]
-        where
-            formatarData = formatTime defaultTimeLocale "%Y-%m-%d"
+            
+

@@ -17,6 +17,8 @@ main = do
     res <- menu tarefas
     salvarEmArquivo "tarefas.txt" res
 
+
+
 inputString :: String -> IO String
 inputString text = do
     putStr text
@@ -82,20 +84,14 @@ menu tarefas = do
             getChar
             menu tarefas
 
-tarefaParaString :: Tarefa -> String
-tarefaParaString tarefa =
-    let linha = "--------=== tarefa " ++ show (idTarefa tarefa) ++ "===--------"
-        conteudo = unlines
-            [ "descricao: " ++ descricao tarefa
-            , "id: " ++ show (idTarefa tarefa)
-            , "status: " ++ show (status tarefa)
-            , "prioridade: " ++ show (prioridade tarefa)
-            , "categoria: " ++ show (categoria tarefa)
-            , "prazo: " ++ show (prazo tarefa)
-            , "tags: " ++ show (tags tarefa)
-            ]
-    in unlines [linha, conteudo, linha]
-
+trataPrazo :: String -> IO (Maybe Day)
+trataPrazo input
+    |input == "" || input == "Nothing" = return Nothing
+    | otherwise = case parseTimeM True defaultTimeLocale "%Y-%m-%d" input of
+        Just d -> return (Just d)
+        Nothing -> do
+            putStrLn "Comando inválido (use Ano-mês-dia)"
+            return Nothing            
 
 adicionarTarefaMenu :: [Tarefa] -> IO [Tarefa]
 adicionarTarefaMenu tarefas = do
@@ -121,7 +117,6 @@ adicionarTarefaMenu tarefas = do
             putStrLn "Tarefa adicionada com sucesso!"
             return tarefas
 
-
 removerTarefaMenu :: [Tarefa] -> IO [Tarefa]
 removerTarefaMenu tarefas = do
     id <- input "Digite o id da tarefa a ser removida: " :: IO Int
@@ -129,9 +124,9 @@ removerTarefaMenu tarefas = do
         Left msg -> do
             putStrLn msg
             return tarefas
-        Right tarefas -> do
+        Right novasTarefas -> do
             putStrLn "Tarefa removida com sucesso!"
-            return tarefas
+            return novasTarefas
 
 marcarConcluidaMenu :: [Tarefa] -> IO [Tarefa]
 marcarConcluidaMenu tarefas = do
@@ -151,7 +146,7 @@ listarPorCategoriaMenu tarefas = do
     categoria <- input "Digite a categoria da tarefa: " :: IO Categoria
     let listaFiltrada = listarPorCategoria categoria tarefas
     putStrLn "\n------------=== Listando Por Categoria ===------------ \n"
-    mapM_ (putStrLn.tarefaParaString) listaFiltrada
+    mapM_ print listaFiltrada
     putStrLn "------------===  Categorias Listadas   ===------------ \n"
     return tarefas
 
@@ -160,7 +155,7 @@ listarPorPrioridadeMenu tarefas = do
     prioridade <- input "Digite a prioridade da tarefa: " :: IO Prioridade
     let listaFiltrada = listarPorPrioridade prioridade tarefas
     putStrLn "\n------------=== Listando Por Prioridade ===------------ \n"
-    mapM_ (putStrLn.tarefaParaString) listaFiltrada
+    mapM_ print listaFiltrada
     putStrLn "------------===  Prioridades Listadas   ===------------ \n"
     return tarefas
 
@@ -169,8 +164,8 @@ ordenarPorPrioridadeMenu tarefas = do
     putStrLn "Ordenando tarefas..."
     let listaOrdenada = ordenarPorPrioridade tarefas
     putStrLn "\n------------=== Ordenando Lista ===------------ \n"
-    mapM_ (putStrLn.tarefaParaString) listaOrdenada
-    putStrLn "\n------------=== Lista Ordenada ===------------ \n"
+    mapM_ print listaOrdenada
+    putStrLn "------------=== Lista Ordenada ===------------ \n"
     return tarefas
 
 
@@ -179,8 +174,8 @@ filtrarPorStatusMenu tarefas = do
     status <- input "Digite o status da tarefa: " :: IO Status
     let listaFiltrada = filtrarPorStatus status tarefas
     putStrLn "\n------------=== Filtrando Lista ===------------ \n"
-    mapM_ (putStrLn.tarefaParaString) listaFiltrada
-    putStrLn "\n------------=== Lista Filtrada ===------------ \n"
+    mapM_ print listaFiltrada
+    putStrLn "------------=== Lista Filtrada ===------------ \n"
     return tarefas
 
 
@@ -189,8 +184,8 @@ buscarPorPalavraChaveMenu tarefas = do
     palavraChave <- inputString "Digite a palavra chave: "
     let listaFiltrada = buscarPorPalavraChave palavraChave tarefas
     putStrLn "\n------------=== Ordenando Lista ===------------ \n"
-    mapM_ (putStrLn.tarefaParaString) listaFiltrada
-    putStrLn "\n------------=== Ordenando Lista ===------------ \n"
+    mapM_ print listaFiltrada
+    putStrLn "------------=== Ordenando Lista ===------------ \n"
     return tarefas
 
 verificarAtrasosMenu :: [Tarefa] -> IO [Tarefa]
@@ -224,8 +219,8 @@ filtrarPorTagMenu tarefas = do
     tag <- inputString "Digite a tag a ser procurada: "
     let listaFiltrada = filtrarPorTag tag tarefas
     putStrLn "\n------------=== Filtrando Lista ===------------ \n"
-    mapM_ (putStrLn.tarefaParaString) listaFiltrada
-    putStrLn "\n------------=== Lista Filtrada ===------------ \n"
+    mapM_ print listaFiltrada
+    putStrLn "------------=== Lista Filtrada ===------------ \n"
     return tarefas
 
 
