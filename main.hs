@@ -82,9 +82,6 @@ menu tarefas = do
             getChar
             menu tarefas
 
-formatarData :: Day -> String
-formatarData = formatTime defaultTimeLocale "%Y-%m-%d"
-
 tarefaParaString :: Tarefa -> String
 tarefaParaString tarefa =
     let linha = "--------=== tarefa " ++ show (idTarefa tarefa) ++ "===--------"
@@ -95,21 +92,6 @@ tarefaParaString tarefa =
             , "prioridade: " ++ show (prioridade tarefa)
             , "categoria: " ++ show (categoria tarefa)
             , "prazo: " ++ show (prazo tarefa)
-            , "tags: " ++ show (tags tarefa)
-            ]
-    in unlines [linha, conteudo, linha]
-
-tarefaParaString :: Tarefa -> String
-tarefaParaString tarefa =
-    let linha = "--------=== tarefa " ++ show (idTarefa tarefa) ++ "===--------"
-        prazoStr = maybe "Sem prazo" formatarData (prazo tarefa)
-        conteudo = unlines
-            [ "descricao: " ++ descricao tarefa
-            , "id: " ++ show (idTarefa tarefa)
-            , "status: " ++ show (status tarefa)
-            , "prioridade: " ++ show (prioridade tarefa)
-            , "categoria: " ++ show (categoria tarefa)
-            , "prazo: " ++ prazoStr
             , "tags: " ++ show (tags tarefa)
             ]
     in unlines [linha, conteudo, linha]
