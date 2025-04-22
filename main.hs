@@ -81,9 +81,11 @@ menu tarefas = do
         [(13 :: Int, "")] -> return tarefas
         _ -> do
             putStr "Comando inválido!\n"
-            nextIteration tarefas
             getChar
             menu tarefas
+
+formatarData :: Day -> String
+formatarData = formatTime defaultTimeLocale "%Y-%m-%d"
 
 tarefaParaString :: Tarefa -> String
 tarefaParaString tarefa =
@@ -99,6 +101,20 @@ tarefaParaString tarefa =
             ]
     in unlines [linha, conteudo, linha]
 
+tarefaParaString :: Tarefa -> String
+tarefaParaString tarefa =
+    let linha = "--------=== tarefa " ++ show (idTarefa tarefa) ++ "===--------"
+        prazoStr = maybe "Sem prazo" formatarData (prazo tarefa)
+        conteudo = unlines
+            [ "descricao: " ++ descricao tarefa
+            , "id: " ++ show (idTarefa tarefa)
+            , "status: " ++ show (status tarefa)
+            , "prioridade: " ++ show (prioridade tarefa)
+            , "categoria: " ++ show (categoria tarefa)
+            , "prazo: " ++ prazoStr
+            , "tags: " ++ show (tags tarefa)
+            ]
+    in unlines [linha, conteudo, linha]
 
 
 adicionarTarefaMenu :: [Tarefa] -> IO [Tarefa]
@@ -109,7 +125,10 @@ adicionarTarefaMenu tarefas = do
     categoria  <- input       "Digite a categoria da tarefa: " :: IO Categoria
     prioridade <- input       "Digite a prioridade da tarefa: " :: IO Prioridade
     status     <- input       "Digite o status da tarefa: " :: IO Status
-    prazo      <- input       "Digite o prazo da tarefa: " :: IO (Maybe Day)
+
+    putStrLn "Digite o prazo da tarefa:"
+    prazo <- getLine >>= trataPrazo
+
     tagsStr    <- inputString "Digite as tags da tarefa (separadas por espaço): "
 
     let tarefa = Tarefa id titulo status prioridade categoria prazo (words tagsStr)
@@ -121,6 +140,7 @@ adicionarTarefaMenu tarefas = do
         Right tarefas -> do
             putStrLn "Tarefa adicionada com sucesso!"
             return tarefas
+
 
 removerTarefaMenu :: [Tarefa] -> IO [Tarefa]
 removerTarefaMenu tarefas = do
