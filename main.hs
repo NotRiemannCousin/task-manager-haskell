@@ -177,14 +177,20 @@ ordenarPorPrioridadeMenu tarefas = do
 filtrarPorStatusMenu :: [Tarefa] -> IO [Tarefa]
 filtrarPorStatusMenu tarefas = do
     status <- input "Digite o status da tarefa: " :: IO Status
-    print $ filtrarPorStatus status tarefas -- lembrar de imprimir bonitinho dps
+    let listaFiltrada = filtrarPorStatus status tarefas
+    putStrLn "\n------------=== Filtrando Lista ===------------ \n"
+    mapM_ (putStrLn.tarefaParaString) listaFiltrada
+    putStrLn "\n------------=== Lista Filtrada ===------------ \n"
     return tarefas
 
 
 buscarPorPalavraChaveMenu :: [Tarefa] -> IO [Tarefa]
 buscarPorPalavraChaveMenu tarefas = do
     palavraChave <- inputString "Digite a palavra chave: "
-    print $ buscarPorPalavraChave palavraChave tarefas -- lembrar de imprimir bonitinho dps
+    let listaFiltrada = buscarPorPalavraChave palavraChave tarefas
+    putStrLn "\n------------=== Ordenando Lista ===------------ \n"
+    mapM_ (putStrLn.tarefaParaString) listaFiltrada
+    putStrLn "\n------------=== Ordenando Lista ===------------ \n"
     return tarefas
 
 verificarAtrasosMenu :: [Tarefa] -> IO [Tarefa]
@@ -216,7 +222,10 @@ calcularDiasRestantesMenu tarefas = do
 filtrarPorTagMenu :: [Tarefa] -> IO [Tarefa]
 filtrarPorTagMenu tarefas = do
     tag <- inputString "Digite a tag a ser procurada: "
-    print $ filtrarPorTag tag tarefas -- lembrar de imprimir bonitinho dps
+    let listaFiltrada = filtrarPorTag tag tarefas
+    putStrLn "\n------------=== Filtrando Lista ===------------ \n"
+    mapM_ (putStrLn.tarefaParaString) listaFiltrada
+    putStrLn "\n------------=== Lista Filtrada ===------------ \n"
     return tarefas
 
 
