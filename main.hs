@@ -85,6 +85,19 @@ menu tarefas = do
             getChar
             menu tarefas
 
+tarefaParaString :: Tarefa -> String
+tarefaParaString tarefa =
+    let linha = "--------=== tarefa " ++ show (idTarefa tarefa) ++ "===--------"
+        conteudo = unlines
+            [ "descricao: " ++ descricao tarefa
+            , "id: " ++ show (idTarefa tarefa)
+            , "status: " ++ show (status tarefa)
+            , "prioridade: " ++ show (prioridade tarefa)
+            , "categoria: " ++ show (categoria tarefa)
+            , "prazo: " ++ show (prazo tarefa)
+            , "tags: " ++ show (tags tarefa)
+            ]
+    in unlines [linha, conteudo, linha]
 
 
 
@@ -136,20 +149,30 @@ marcarConcluidaMenu tarefas = do
 listarPorCategoriaMenu :: [Tarefa] -> IO [Tarefa]
 listarPorCategoriaMenu tarefas = do
     categoria <- input "Digite a categoria da tarefa: " :: IO Categoria
-    print $ listarPorCategoria categoria tarefas -- lembrar de imprimir bonitinho dps
+    let listaFiltrada = listarPorCategoria categoria tarefas
+    putStrLn "\n------------=== Listando Por Categoria ===------------ \n"
+    mapM_ (putStrLn.tarefaParaString) listaFiltrada
+    putStrLn "------------===  Categorias Listadas   ===------------ \n"
     return tarefas
 
 listarPorPrioridadeMenu :: [Tarefa] -> IO [Tarefa]
 listarPorPrioridadeMenu tarefas = do
     prioridade <- input "Digite a prioridade da tarefa: " :: IO Prioridade
-    print $ listarPorPrioridade prioridade tarefas -- lembrar de imprimir bonitinho dps
+    let listaFiltrada = listarPorPrioridade prioridade tarefas
+    putStrLn "\n------------=== Listando Por Prioridade ===------------ \n"
+    mapM_ (putStrLn.tarefaParaString) listaFiltrada
+    putStrLn "------------===  Prioridades Listadas   ===------------ \n"
     return tarefas
 
 ordenarPorPrioridadeMenu :: [Tarefa] -> IO [Tarefa]
 ordenarPorPrioridadeMenu tarefas = do
     putStrLn "Ordenando tarefas..."
-    print $ ordenarPorPrioridade tarefas -- lembrar de imprimir bonitinho dps
+    let listaOrdenada = ordenarPorPrioridade tarefas
+    putStrLn "\n------------=== Ordenando Lista ===------------ \n"
+    mapM_ (putStrLn.tarefaParaString) listaOrdenada
+    putStrLn "\n------------=== Lista Ordenada ===------------ \n"
     return tarefas
+
 
 filtrarPorStatusMenu :: [Tarefa] -> IO [Tarefa]
 filtrarPorStatusMenu tarefas = do
