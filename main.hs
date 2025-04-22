@@ -99,21 +99,14 @@ tarefaParaString tarefa =
             ]
     in unlines [linha, conteudo, linha]
 
-tarefaParaString :: Tarefa -> String
-tarefaParaString tarefa =
-    let linha = "--------=== tarefa " ++ show (idTarefa tarefa) ++ "===--------"
-        prazoStr = maybe "Sem prazo" formatarData (prazo tarefa)
-        conteudo = unlines
-            [ "descricao: " ++ descricao tarefa
-            , "id: " ++ show (idTarefa tarefa)
-            , "status: " ++ show (status tarefa)
-            , "prioridade: " ++ show (prioridade tarefa)
-            , "categoria: " ++ show (categoria tarefa)
-            , "prazo: " ++ prazoStr
-            , "tags: " ++ show (tags tarefa)
-            ]
-    in unlines [linha, conteudo, linha]
-
+trataPrazo :: String -> IO (Maybe Day)
+trataPrazo input
+    |input == "" || input == "Nothing" = return Nothing
+    | otherwise = case parseTimeM True defaultTimeLocale "%Y-%m-%d" input of
+        Just d -> return (Just d)
+        Nothing -> do
+            putStrLn "Comando inválido (use Ano-mês-dia)"
+            return Nothing   
 
 adicionarTarefaMenu :: [Tarefa] -> IO [Tarefa]
 adicionarTarefaMenu tarefas = do
