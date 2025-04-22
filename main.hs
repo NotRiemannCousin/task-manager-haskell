@@ -17,6 +17,8 @@ main = do
     res <- menu tarefas
     salvarEmArquivo "tarefas.txt" res
 
+
+
 inputString :: String -> IO String
 inputString text = do
     putStr text
@@ -88,13 +90,14 @@ formatarData = formatTime defaultTimeLocale "%Y-%m-%d"
 tarefaParaString :: Tarefa -> String
 tarefaParaString tarefa =
     let linha = "--------=== tarefa " ++ show (idTarefa tarefa) ++ "===--------"
+        prazoStr = maybe "Sem prazo" formatarData (prazo tarefa)
         conteudo = unlines
             [ "descricao: " ++ descricao tarefa
             , "id: " ++ show (idTarefa tarefa)
             , "status: " ++ show (status tarefa)
             , "prioridade: " ++ show (prioridade tarefa)
             , "categoria: " ++ show (categoria tarefa)
-            , "prazo: " ++ show (prazo tarefa)
+            , "prazo: " ++ prazoStr
             , "tags: " ++ show (tags tarefa)
             ]
     in unlines [linha, conteudo, linha]
@@ -106,7 +109,7 @@ trataPrazo input
         Just d -> return (Just d)
         Nothing -> do
             putStrLn "Comando inválido (use Ano-mês-dia)"
-            return Nothing   
+            return Nothing            
 
 adicionarTarefaMenu :: [Tarefa] -> IO [Tarefa]
 adicionarTarefaMenu tarefas = do
@@ -131,7 +134,6 @@ adicionarTarefaMenu tarefas = do
         Right tarefas -> do
             putStrLn "Tarefa adicionada com sucesso!"
             return tarefas
-
 
 removerTarefaMenu :: [Tarefa] -> IO [Tarefa]
 removerTarefaMenu tarefas = do
@@ -181,7 +183,7 @@ ordenarPorPrioridadeMenu tarefas = do
     let listaOrdenada = ordenarPorPrioridade tarefas
     putStrLn "\n------------=== Ordenando Lista ===------------ \n"
     mapM_ (putStrLn.tarefaParaString) listaOrdenada
-    putStrLn "\n------------=== Lista Ordenada ===------------ \n"
+    putStrLn "------------=== Lista Ordenada ===------------ \n"
     return tarefas
 
 
@@ -191,7 +193,7 @@ filtrarPorStatusMenu tarefas = do
     let listaFiltrada = filtrarPorStatus status tarefas
     putStrLn "\n------------=== Filtrando Lista ===------------ \n"
     mapM_ (putStrLn.tarefaParaString) listaFiltrada
-    putStrLn "\n------------=== Lista Filtrada ===------------ \n"
+    putStrLn "------------=== Lista Filtrada ===------------ \n"
     return tarefas
 
 
@@ -201,7 +203,7 @@ buscarPorPalavraChaveMenu tarefas = do
     let listaFiltrada = buscarPorPalavraChave palavraChave tarefas
     putStrLn "\n------------=== Ordenando Lista ===------------ \n"
     mapM_ (putStrLn.tarefaParaString) listaFiltrada
-    putStrLn "\n------------=== Ordenando Lista ===------------ \n"
+    putStrLn "------------=== Ordenando Lista ===------------ \n"
     return tarefas
 
 verificarAtrasosMenu :: [Tarefa] -> IO [Tarefa]
@@ -236,7 +238,7 @@ filtrarPorTagMenu tarefas = do
     let listaFiltrada = filtrarPorTag tag tarefas
     putStrLn "\n------------=== Filtrando Lista ===------------ \n"
     mapM_ (putStrLn.tarefaParaString) listaFiltrada
-    putStrLn "\n------------=== Lista Filtrada ===------------ \n"
+    putStrLn "------------=== Lista Filtrada ===------------ \n"
     return tarefas
 
 
