@@ -102,7 +102,7 @@ adicionarTarefaMenu tarefas = do
     prioridade <- input       "Digite a prioridade da tarefa (Baixa | Media | Alta): " :: IO Prioridade
     status     <- input       "Digite o status da tarefa (Pendente | Concluída): " :: IO Status
 
-    putStrLn "Digite o prazo da tarefa:"
+    putStrLn "Digite o prazo da tarefa (YYYY-MM-DD | Nothing) ": "
     prazo <- getLine >>= trataPrazo
 
     tagsStr    <- inputString "Digite as tags da tarefa (separadas por espaço): "
