@@ -20,8 +20,15 @@ Código executado!
 4. Compilando os testes
 
 Vá para o diretório do projeto
-Digite "ghci -package QuickCheck -package time testes.hs
+
+Digite "ghci"
+
+Digite ":set -package time"
+
+Digite ":l testes.hs
 
 5. Executando os testes
+
 Digite "main"
+
 Código executado!
