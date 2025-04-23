@@ -5,7 +5,7 @@ Um gerenciador de tarefas feito em Haskell para a disciplina de programação fu
 
 Vá para o diretório do projeto
 
-Digite "ghc -páckage time main.hs"
+Digite "ghc -package time main.hs"
 
 Digite "./main"
 
@@ -13,6 +13,6 @@ Digite "./main"
 
 Vá para o diretório do projeto
 
-Digite "ghc -páckage time testes.hs"
+Digite "ghc -package time testes.hs"
 
 Digite "./main"
