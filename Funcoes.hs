@@ -11,6 +11,7 @@ module Funcoes (
     calcularDiasRestantes,
     filtrarPorTag,
     mostrarTarefa,
+    transformarMinuscula,
     nuvemDeTags
 ) where
 import Data.Time.Calendar (Day, diffDays)
