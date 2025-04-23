@@ -16,3 +16,12 @@ Digite ":l main.hs"
 Digite "main"
 
 Código executado!
+
+4. Compilando os testes
+
+Vá para o diretório do projeto
+Digite "ghci -package QuickCheck -package time testes.hs
+
+5. Executando os testes
+Digite "main"
+Código executado!
