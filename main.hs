@@ -59,7 +59,8 @@ menu tarefas = do
     putStrLn "  10  > calcular dias restantes"
     putStrLn "  11  > filtrar tarefa por tag"
     putStrLn "  12  > nuvem de tags"
-    putStrLn "  13  > Sair"
+    putStrLn "  13  > relatorio"
+    putStrLn "  14  > Sair"
     putStrLn "- Digite o numero da ação: "
     -- o getChar segura o terminal até uma linha ser precionada, dps vai para o menu
     let nextIteration ts = getLine >> menu ts
@@ -78,7 +79,8 @@ menu tarefas = do
         [(10 :: Int, "")] -> calcularDiasRestantesMenu tarefas >>= nextIteration
         [(11 :: Int, "")] -> filtrarPorTagMenu tarefas         >>= nextIteration
         [(12 :: Int, "")] -> nuvemDeTagsMenu tarefas           >>= nextIteration
-        [(13 :: Int, "")] -> return tarefas
+        [(13 :: Int, "")] -> relatorioMenu tarefas             >>= nextIteration    
+        [(14 :: Int, "")] -> return tarefas
         _ -> do
             putStr "Comando inválido!\n"
             nextIteration tarefas
@@ -91,6 +93,13 @@ trataPrazo input
         Nothing -> do
             putStrLn "Comando inválido (use Ano-mês-dia)"
             return Nothing            
+
+relatorioMenu :: [Tarefa] -> IO [Tarefa]
+relatorioMenu tarefas = do
+    putStrLn "\n------------=== Relatorio inicio ===------------ \n"
+    putStr (relatorio tarefas)
+    putStrLn "\n------------=== Relatorio fim ===------------ \n"
+    return tarefas
 
 adicionarTarefaMenu :: [Tarefa] -> IO [Tarefa]
 adicionarTarefaMenu tarefas = do
