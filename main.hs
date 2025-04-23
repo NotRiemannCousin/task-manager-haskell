@@ -23,11 +23,7 @@ inputString :: String -> IO String
 inputString text = do
     putStr text
     line <- getLine
-    if line /= ""
-       then return line
-       else do
-        putStr "String não vazia!\n"
-        input text
+    return line
 
 input :: Read a => String -> IO a
 input text = do
