@@ -12,7 +12,8 @@ module Funcoes (
     filtrarPorTag,
     mostrarTarefa,
     transformarMinuscula,
-    nuvemDeTags
+    nuvemDeTags,
+    relatorio
 ) where
 import Data.Time.Calendar (Day, diffDays)
 import Tipos
@@ -130,7 +131,7 @@ nuvemDeTags tarefas = removerDuplicadas $ map (\t -> (t, count t allTags)) allTa
                     count x xs      = length $ filter (==x) xs
 
 -- As variáveis locais são utilizadas para facilitar nos cálculos de porcentagem.
-relatorio :: [Tarefa] -> String
+relatorio :: [Tarefa] -> String 
 relatorio tarefas =
   let total = length tarefas
       pendentes = length (filter (\t -> status t == Pendente) tarefas)
