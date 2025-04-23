@@ -164,6 +164,10 @@ runTests = do
     quickCheck propNuvemDeTagsProblem
 
 
+main :: IO ()
+main = runTests
+
+
 
 
 
