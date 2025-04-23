@@ -1,7 +1,7 @@
 module Tipos where
 
-import Data.Time.Calendar
-import Data.Time
+import Data.Time.Calendar (Day)
+import Data.Time.Calendar (Day)
 
 data Status = Pendente | Concluída deriving (Show, Read, Eq)
 
@@ -17,14 +17,14 @@ data Tarefa = Tarefa
     , categoria   :: Categoria
     , prazo       :: Maybe Day
     , tags       :: [String]
-    } deriving (Read, Eq)
+    } deriving (Show, Read, Eq)
 
 
 showDay :: Maybe Day -> String
 showDay Nothing = "Sem prazo"
 showDay (Just d) = formatTime defaultTimeLocale "%Y-%m-%d" d
 
-instance Show Tarefa where
+ where
     show tarefa =
         let linha = "--------=== tarefa " ++ show (idTarefa tarefa) ++ "===--------"
             conteudo = unlines
