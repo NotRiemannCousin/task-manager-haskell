@@ -62,7 +62,7 @@ menu tarefas = do
     putStrLn "  13  > Sair"
     putStrLn "- Digite o numero da ação: "
     -- o getChar segura o terminal até uma linha ser precionada, dps vai para o menu
-    let nextIteration ts = getChar >> menu ts
+    let nextIteration ts = getLine >> menu ts
     -- resposta --
     input <- getLine
     case reads input of
@@ -81,8 +81,7 @@ menu tarefas = do
         [(13 :: Int, "")] -> return tarefas
         _ -> do
             putStr "Comando inválido!\n"
-            getChar
-            menu tarefas
+            nextIteration tarefas
 
 trataPrazo :: String -> IO (Maybe Day)
 trataPrazo input
@@ -146,7 +145,7 @@ listarPorCategoriaMenu tarefas = do
     categoria <- input "Digite a categoria da tarefa (Trabalho | Estudos | Pessoal | Outro): " :: IO Categoria
     let listaFiltrada = listarPorCategoria categoria tarefas
     putStrLn "\n------------=== Listando Por Categoria ===------------ \n"
-    mapM_ print listaFiltrada
+    mapM_ (putStrLn . showTarefa) listaFiltrada
     putStrLn "------------===  Categorias Listadas   ===------------ \n"
     return tarefas
 
@@ -155,7 +154,7 @@ listarPorPrioridadeMenu tarefas = do
     prioridade <- input "Digite a prioridade da tarefa (Baixa | Media | Alta): " :: IO Prioridade
     let listaFiltrada = listarPorPrioridade prioridade tarefas
     putStrLn "\n------------=== Listando Por Prioridade ===------------ \n"
-    mapM_ print listaFiltrada
+    mapM_ (putStrLn . showTarefa) listaFiltrada
     putStrLn "------------===  Prioridades Listadas   ===------------ \n"
     return tarefas
 
@@ -164,7 +163,7 @@ ordenarPorPrioridadeMenu tarefas = do
     putStrLn "Ordenando tarefas..."
     let listaOrdenada = ordenarPorPrioridade tarefas
     putStrLn "\n------------=== Ordenando Lista ===------------ \n"
-    mapM_ print listaOrdenada
+    mapM_ (putStrLn . showTarefa) listaOrdenada
     putStrLn "------------=== Lista Ordenada ===------------ \n"
     return tarefas
 
@@ -174,7 +173,7 @@ filtrarPorStatusMenu tarefas = do
     status <- input "Digite o status da tarefa (Pendente | Concluída): " :: IO Status
     let listaFiltrada = filtrarPorStatus status tarefas
     putStrLn "\n------------=== Filtrando Lista ===------------ \n"
-    mapM_ print listaFiltrada
+    mapM_ (putStrLn . showTarefa) listaFiltrada
     putStrLn "------------=== Lista Filtrada ===------------ \n"
     return tarefas
 
@@ -184,7 +183,7 @@ buscarPorPalavraChaveMenu tarefas = do
     palavraChave <- inputString "Digite a palavra chave: "
     let listaFiltrada = buscarPorPalavraChave palavraChave tarefas
     putStrLn "\n------------=== Ordenando Lista ===------------ \n"
-    mapM_ print listaFiltrada
+    mapM_ (putStrLn . showTarefa) listaFiltrada
     putStrLn "------------=== Ordenando Lista ===------------ \n"
     return tarefas
 
@@ -219,7 +218,7 @@ filtrarPorTagMenu tarefas = do
     tag <- inputString "Digite a tag a ser procurada: "
     let listaFiltrada = filtrarPorTag tag tarefas
     putStrLn "\n------------=== Filtrando Lista ===------------ \n"
-    mapM_ print listaFiltrada
+    mapM_ (putStrLn . showTarefa) listaFiltrada
     putStrLn "------------=== Lista Filtrada ===------------ \n"
     return tarefas
 
@@ -229,3 +228,26 @@ nuvemDeTagsMenu tarefas = do
     putStrLn "Tags:"
     print $ nuvemDeTags tarefas -- lembrar de imprimir bonitinho dps
     return tarefas
+
+
+
+showDay :: Maybe Day -> String
+showDay Nothing = "Sem prazo"
+showDay (Just d) = formatTime defaultTimeLocale "%Y-%m-%d" d
+
+
+showTarefa :: Tarefa -> String
+showTarefa tarefa =
+        let linha = "--------=== tarefa " ++ show (idTarefa tarefa) ++ "===--------"
+            conteudo = unlines
+                [ "descricao: "  ++ descricao tarefa
+                , "id: "         ++ show    (idTarefa tarefa)
+                , "status: "     ++ show    (status tarefa)
+                , "prioridade: " ++ show    (prioridade tarefa)
+                , "categoria: "  ++ show    (categoria tarefa)
+                , "prazo: "      ++ showDay (prazo tarefa)
+                , "tags: "       ++ show    (tags tarefa)
+                ]
+        in concat [linha, conteudo, linha]
+            
+
