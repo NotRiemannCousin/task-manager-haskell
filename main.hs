@@ -238,7 +238,7 @@ showDay (Just d) = formatTime defaultTimeLocale "%Y-%m-%d" d
 
 showTarefa :: Tarefa -> String
 showTarefa tarefa =
-        let linha = "--------=== tarefa " ++ show (idTarefa tarefa) ++ "===--------"
+        let linha = "--------=== tarefa " ++ show (idTarefa tarefa) ++ "===--------\n"
             conteudo = unlines
                 [ "descricao: "  ++ descricao tarefa
                 , "id: "         ++ show    (idTarefa tarefa)
