@@ -5,30 +5,14 @@ Um gerenciador de tarefas feito em Haskell para a disciplina de programação fu
 
 Vá para o diretório do projeto
 
-Digite "ghci"
+Digite "ghc -páckage time main.hs"
 
-Digite ":set editor nano"
-
-Digite ":l main.hs"
-
-3. Executando o código:
-
-Digite "main"
-
-Código executado!
+Digite "./main"
 
 4. Compilando os testes
 
 Vá para o diretório do projeto
 
-Digite "ghci"
+Digite "ghc -páckage time testes.hs"
 
-Digite ":set -package time"
-
-Digite ":l testes.hs
-
-5. Executando os testes
-
-Digite "main"
-
-Código executado!
+Digite "./main"
