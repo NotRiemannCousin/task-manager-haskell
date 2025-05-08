@@ -1,155 +1,103 @@
 module Funcoes (
-    adicionarTarefa,
-    removerTarefa,
-    marcarConcluida,
-    listarPorCategoria,
-    listarPorPrioridade,
-    ordenarPorPrioridade,
-    filtrarPorStatus,
-    buscarPorPalavraChave,
-    verificarAtrasos,
-    calcularDiasRestantes,
-    filtrarPorTag,
-    mostrarTarefa,
-    transformarMinuscula,
-    nuvemDeTags,
-    relatorio
+    adicionarlivro,
+    coutlivro,
+    removerLivro,
+    adicionarusuario,
+    coutusuarios,
+    removerusuario,
+    listaespera,
+    exibirlistaespera,
+    registraremprestimo,
+    registrardevolucoes,
+    listarPorDisponibilidade
 ) where
-import Data.Time.Calendar (Day, diffDays)
 import Tipos
 
 
--- FUNÇÕES BÁSICAS
-adicionarTarefa :: Tarefa -> [Tarefa] -> Either String [Tarefa]
-adicionarTarefa novaTarefa tarefas
-    | [t | t <- tarefas, idTarefa t == idTarefa novaTarefa] /= [] = Left "Erro!Tarefa já registrada"
-    | otherwise = Right (novaTarefa : tarefas)
+adicionarlivro:: Livro -> [Livro] -> Either String [Livro]
+adicionarlivro liv x =  if elem liv x
+                        then Left "Erro! Livro já registrado"
+                        else Right (liv : x)
 
-removerTarefa :: Int -> [Tarefa] -> Either String [Tarefa]
-removerTarefa id tarefas =
-    if any (\t -> idTarefa t == id) tarefas
-       then Right (filter (\t -> idTarefa t /= id) tarefas)
-       else Left "Erro! Tarefa não encontrada"
-
-marcarConcluida :: Int -> [Tarefa] -> Either String [Tarefa]
-marcarConcluida id tarefas =
-    if any (\t -> idTarefa t == id) tarefas
-       then Right (map (\t -> if idTarefa t == id then t {status = Concluída} else t) tarefas)
-       else Left "Erro! Tarefa não encontrada"
--- FUNÇÕES BÁSICAS
-
-
+coutlivro :: Livro -> String
+coutlivro mostrarlivro =
+        "----========= Livro =========----\n" ++
+        " Título:       " ++ titulo mostrarlivro ++ "\n " ++ 
+        "Autor:        " ++ autor mostrarlivro ++ "\n " ++
+        "Ano:          " ++ show (ano mostrarlivro) ++ "\n " ++
+        "Código Único: " ++ show (cod mostrarlivro) ++ "\n " ++
+        "Status:       " ++ show (status mostrarlivro) ++ "\n " ++
+        "Dono:         " ++ donoStr ++ "\n"
+    where
+        donoStr = case dono mostrarlivro of
+            Nothing  -> "Dono: Nenhum"
+            Just usr -> "Dono: " ++ nome usr ++ " (" ++ show (matricula usr) ++ ")"
 
 
--- filtra a lista "lista" com a categoria "cat"
 
-listarPorCategoria :: Categoria -> [Tarefa] -> [Tarefa]
-listarPorCategoria cat lista = filter (\t -> categoria t == cat) lista
-
--- filtra a lista "lista" com a prioridade "pri"
-
-listarPorPrioridade :: Prioridade -> [Tarefa] -> [Tarefa]
-listarPorPrioridade pri lista = filter (\t -> prioridade t == pri) lista
-
--- se a lista for unitaria, retorna o unico elemento, caso seja binaria, compara a com b e retorna [a, b] ou [b, a], 
--- dependendo da prioridade, caso o tamanho seja > 2, ela compara os valores um por um, salvando no topo da lista os de maior prioridade
-
-ordenarPorPrioridade :: [Tarefa] -> [Tarefa]
-ordenarPorPrioridade [] = []
-ordenarPorPrioridade [a] = [a]
-ordenarPorPrioridade [a, b]
-    |prioridade a > prioridade b = [a, b]
-    |otherwise = [b, a]
-ordenarPorPrioridade (a:b:c:xs)
-    |prioridade a >= prioridade b && prioridade a >= prioridade c = a:ordenarPorPrioridade (b:c:xs)
-    |prioridade b >= prioridade a && prioridade b >= prioridade c = b:ordenarPorPrioridade (a:c:xs)
-    |otherwise = c:ordenarPorPrioridade(a:b:xs)
-
--- filter nesse caso tem como objetivo filtrar os elementos de um certo status t que são iguais a variavel estado da lista de tarefas principal
-
-filtrarPorStatus :: Status -> [Tarefa] -> [Tarefa]
-filtrarPorStatus estado lista = filter (\t -> status t == estado) lista
-
-buscarPorPalavraChave :: String -> [Tarefa] -> [Tarefa]
-buscarPorPalavraChave tarefReq lista = 
-    filter(\t -> transformarMinuscula (descricao t) == transformarMinuscula tarefReq) lista 
-
-transformarMinuscula :: String -> String
-transformarMinuscula [] = []
-transformarMinuscula (x:xs)
-    | x >= 'A' && x <= 'Z' = toEnum (fromEnum x + 32) : transformarMinuscula xs
-    | otherwise            = x : transformarMinuscula xs
+removerLivro :: Int -> [Livro] -> Either String [Livro]
+removerLivro id livros = 
+    if any (\t -> cod t == id) livros
+        then Right (filter (\p -> cod p /= id) livros) 
+        else Left "Erro! Livro não registrado!"
 
 
-mostrarTarefa :: Tarefa -> String
-mostrarTarefa tarefa =
-    "ID: " ++ show (idTarefa tarefa) ++ "; " ++
-    "Descrição: " ++ show (descricao tarefa) ++ "; " ++
-    "Status: " ++ show (status tarefa) ++ "; " ++
-    "Prioridade: " ++ show (prioridade tarefa) ++ "; " ++
-    "Categoria: " ++ show (categoria tarefa) ++ "; " ++
-    "Prazo: " ++ maybe "Sem prazo" show (prazo tarefa) ++ "; " ++
-    "Tags: " ++ show (tags tarefa)
+adicionarusuario :: User -> [User] -> Either String [User]
+adicionarusuario us x = if elem us x
+                        then Left "Erro! Usuário já cadastrado"
+                        else Right (us : x)
 
+coutusuarios :: User -> String
+coutusuarios mostrarUser =
+    "----========= Usuario =========----\n" ++
+    "Nome:      " ++ show (nome mostrarUser) ++ "\n" ++
+    "Matrícula: " ++ show ( matricula mostrarUser) ++ "\n" ++
+    "Email:     " ++ show (email mostrarUser) ++ "\n"
 
--- KG
+removerusuario :: Int -> [User] -> Either String [User]
+removerusuario id usuarios =
+    if any (\t -> matricula t == id) usuarios
+        then Right (filter (\t -> matricula t /= id) usuarios)
+        else Left "Erro! Usuario não registrado!"
 
--- Se a tarefa não tem prazo, o resultado é Nothing. Caso contrário, usa a função diffDays pra pegar a quantidade
--- de dias, transforma de Interger pra Int e retorna como Just (significa que o valor existe, não é nothing)
-calcularDiasRestantes :: Tarefa -> Day -> Maybe Int
-calcularDiasRestantes (Tarefa {prazo = Nothing}) _ = Nothing
-calcularDiasRestantes (Tarefa {prazo = Just prazo}) termino = Just $ fromIntegral $ diffDays prazo termino
+registraremprestimo :: Int -> User -> [Livro] -> IO (Either String [Livro])
+registraremprestimo id user livros =
+    case break (\l -> cod l == id) livros of
+        (_, []) -> return $ Left "Erro: livro não encontrado"
+        (antes, livro:depois) ->
+            case status livro of
+                Disponivel -> do
+                    let livroEmprestado = livro {status = Emprestado, dono = Just user}
+                    return $ Right (antes ++ [livroEmprestado] ++ depois)
+                Emprestado -> do
+                    putStrLn "Livro indisponível, gostaria de entrar na lista de espera? sim/não"
+                    resposta <- getLine
+                    if resposta == "sim" then
+                        if user `elem` fila livro then
+                            return $ Left "Você já está na fila deste livro!"
+                        else do
+                            let novaFila = fila livro ++ [user]
+                                livroAtualizado = livro {fila = novaFila}
+                            return $ Right (antes ++ [livroAtualizado] ++ depois)
+                    else
+                        return $ Left "Ok!"
+                Indisponivel -> return $ Left "Livro está indisponível"
 
+registrardevolucoes :: Int -> [Livro] -> Either String [Livro]
+registrardevolucoes t livros =
+    if elem t (map cod livros)
+    then Right (map (\livro -> if cod livro == t then livro {status = Disponivel, dono = Nothing} else livro) livros)
+    else Left "Erro, livro não encontrado"
 
-verificarAtrasos :: [Tarefa] -> Day -> [Tarefa]
-verificarAtrasos tarefas dia =
-    [t | t <- tarefas,
-     case prazo t of
-       Just p -> p <= dia
-       Nothing -> False
-    ]
+listarPorDisponibilidade :: Status -> [Livro] -> [Livro]
+listarPorDisponibilidade sta lista = filter (\t -> status t == sta) lista
 
+-- Testado!!
+listaespera :: User -> Fila -> Either String Fila
+listaespera user queue =    if elem user (usuarios queue)
+                            then Left "Erro! Usuário já está na fila"
+                            else Right queue { usuarios = user : usuarios queue}
 
--- Quando cada tarefa entra no `filter` primeiro selecionamos a sua lista de tags e depois filtramos vendo
--- se a tag procurada está na lista.
-filtrarPorTag :: String -> [Tarefa] -> [Tarefa]
-filtrarPorTag tag tarefas = filter (any (== tag) . tags) tarefas
-
-
--- Essa é uma função auxiliar que não será exportada.
-removerDuplicadas :: Eq a => [a] -> [a]
-removerDuplicadas [] = []
-removerDuplicadas (x:xs) = x : removerDuplicadas (filter (/= x) xs)
-
-
--- Em allTags, primeiro pegamos as listas de tags de cada tarefa com o `map` e concatenamos essas listas. Depois
--- com o map para cada tag contamos quantas vezes ela aparece na propria lista, e depois removemos as duplicadas.
-nuvemDeTags :: [Tarefa] -> [(String, Int)]
-nuvemDeTags tarefas = removerDuplicadas $ map (\t -> (t, count t allTags)) allTags
-                where
-                    allTags         = concat $ map (tags) tarefas
-                    count x xs      = length $ filter (==x) xs
-
--- As variáveis locais são utilizadas para facilitar nos cálculos de porcentagem.
-relatorio :: [Tarefa] -> String 
-relatorio tarefas =
-  let total = length tarefas
-      pendentes = length (filter (\t -> status t == Pendente) tarefas)
-      concluidas = length (filter (\t -> status t == Concluída) tarefas)
-      trabalho = length (filter (\t -> categoria t == Trabalho) tarefas)
-      estudo = length (filter (\t -> categoria t == Estudos) tarefas)
-      pessoal = length (filter (\t -> categoria t == Pessoal) tarefas)
-      outro = length (filter (\t -> categoria t == Outro) tarefas)
-
-  in  "Tarefas totais: " ++ show total ++ "\n" ++
-      "Pendentes: " ++ show pendentes ++ "\n" ++
-      "Concluídas: " ++  show concluidas ++ "\n" ++
-      "Distribuição por categoria: " ++ "\n" ++
-      "   - Trabalho: " ++ show trabalho ++ " (" ++ show (porcentagem (trabalho) (length tarefas)) ++ "%)" ++ "\n" ++
-      "   - Estudos: " ++ show estudo ++ " (" ++ show (porcentagem (estudo) (length tarefas)) ++ "%)" ++ "\n" ++
-      "   - Pessoal: " ++ show pessoal ++ " (" ++ show (porcentagem (pessoal) (length tarefas)) ++ "%)" ++ "\n" ++
-      "   - Outro: " ++ show outro ++ " (" ++ show (porcentagem (outro) (length tarefas)) ++ "%)"
-
-
-porcentagem :: Int -> Int -> Float
-porcentagem x total = (fromIntegral x / fromIntegral total) * 100
+exibirlistaespera :: Livro -> String
+exibirlistaespera livro =
+    unlines (map coutusuarios (fila livro)) ++ "\nTotal de usuários na fia: " ++ show (length(fila livro))
